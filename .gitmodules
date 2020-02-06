@@ -1,0 +1,3 @@
+[submodule "mistune"]
+	path = mistune
+	url = git@github.com:lepture/mistune.git

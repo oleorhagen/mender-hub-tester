@@ -1,0 +1,5 @@
+.venv/
+article.md
+cookbook.org
+test-script
+*.md

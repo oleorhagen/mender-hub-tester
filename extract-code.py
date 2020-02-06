@@ -20,15 +20,26 @@ add it to a shell script, and execute it (with -e -x set).
 
 # Create a code renderer
 class DocumentationCodeRenderer(mistune.AstRenderer):
-    NAME = 'code'
+    """DocumentationCodeRenderer travereses the AST of the markdown file given.
+
+    :param output_file - The file to render the output to (Can probably be a stream?)
+
+    :output
+
+    All the code and hidden automation comments in the markdown file will be
+    written to the output stream given in the order they are encountered.
+
+    """
+
+    NAME = 'code-renderer'
     IS_TREE = True
 
+    # If an ignore automation comment is given, ignore the next code block
     IGNORE_NEXT_CODE_BLOCK = False
 
     def __init__(self, output_file=None):
         if output_file is not None:
             self.output_file = output_file
-
 
     # Hidden documentation automation commands
     AUTOMATION_EXECUTE_REGEXP = "<!---\s*AUTOMATION: execute=`(.*)`\s*-->"
@@ -36,7 +47,16 @@ class DocumentationCodeRenderer(mistune.AstRenderer):
     AUTOMATION_TEST_REGEXP = "<!---\s*AUTOMATION: test=`(.*)`\s*-->"
 
     def block_html(self, children):
-        # Check if it is an automation comment.
+
+    # """An HTML block can be a special automation comment.
+
+    #     Render it if it matches one of the three automation faculties we support:
+
+    #         * <!--- AUTOMATION: execute=`command to execute` -->
+    #         * <!--- AUTOMATION: test=`test the result of some command` -->
+    #         * <!--- AUTOMATION: ignore=`reason for ignoring the next bash block` -->
+
+    # """
         #
         # Type: execute
         #
@@ -62,7 +82,6 @@ class DocumentationCodeRenderer(mistune.AstRenderer):
             self.output_file.write(str(me.group(1))+"\n\n")
             return None
         return None
-
 
     def block_code(self, children, info=None):
         """Only render a block of code if it is bash marked, and it is not ignored"""

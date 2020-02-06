@@ -94,10 +94,9 @@ class DocumentationCodeRenderer(mistune.AstRenderer):
               for line in children.split("\n"):
                   self.output_file.write("# {}\n".format(line))
               return None
-          self.output_file.write(children)
+          self.output_file.write(children+"\n\n")
         return None
 
-code_blocks = []
 
 with open("article.md", mode="r") as af:
 

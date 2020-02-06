@@ -40,6 +40,8 @@ class DocumentationCodeRenderer(mistune.AstRenderer):
     def __init__(self, output_file=None):
         if output_file is not None:
             self.output_file = output_file
+            self.output_file.write("#! /bin/bash\n")
+            self.output_file.write("set -x -e\n\n")
 
     # Hidden documentation automation commands
     AUTOMATION_EXECUTE_REGEXP = "<!---\s*AUTOMATION: execute=`(.*)`\s*-->"

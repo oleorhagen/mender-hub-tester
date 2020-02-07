@@ -1,5 +1,7 @@
+#! /bin/python3
 
 import re
+import sys
 
 from mistune import mistune
 
@@ -98,21 +100,25 @@ class DocumentationCodeRenderer(mistune.AstRenderer):
         return None
 
 
-with open("article.md", mode="r") as af:
+if __name__ == "__main__":
+    if len(sys.argv) != 3:
+        print("Usage: in.md out.bash")
+        sys.exit(2)
 
-    data = af.read()
+    with open(sys.argv[1], mode="r") as af:
 
-    try:
-      output_file = open("test-script", mode="w")
-    except Exception as e:
-        print("Error opening file: {}".format(e))
+        data = af.read()
 
-    renderer = DocumentationCodeRenderer(output_file)
+        try:
+          output_file = open(sys.argv[2], mode="w")
+        except Exception as e:
+            print("Error opening file: {}".format(e))
 
-    # Generate AST tokens instead of html
-    markdown = mistune.create_markdown(renderer=renderer)
+        renderer = DocumentationCodeRenderer(output_file)
 
-    markdown(data)
+        markdown = mistune.create_markdown(renderer=renderer)
 
-    output_file.close()
+        markdown(data)
+
+        output_file.close()
 

@@ -2,18 +2,23 @@
 
 
 # Get the markdown the article is generated from
-echo -e $(curl https://hub.mender.io/posts/284.json | jq '.raw') > article.md
+# echo -e $(curl https://hub.mender.io/posts/284.json | jq '.raw') > article.md
 
 # Build a test-script from the Mender-Hub article
 # This will create a script: 'test-script'
 # TODO - Accept the 'article.md' parameter
 # and also the name of the output file?
-python extract-code.py
+# python extract-code.py article.md test-script
 
 # Make it executable
 chmod +x test-script
 
 # Run the test
-./test-script
+if ./test-script; then
+    echo "Success!"
+else
+    echo "Failure!"
+    exit 1
+fi
 
-# What is the expected output?
+exit 0

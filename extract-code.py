@@ -3,7 +3,7 @@
 import re
 import sys
 
-from mistune import mistune
+import mistune
 
 
 """

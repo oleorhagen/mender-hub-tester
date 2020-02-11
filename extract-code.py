@@ -51,16 +51,15 @@ class DocumentationCodeRenderer(mistune.AstRenderer):
     AUTOMATION_TEST_REGEXP = "<!---\s*AUTOMATION: test=`(.*)`\s*-->"
 
     def block_html(self, children):
+        """An HTML block can be a special automation comment.
 
-    # """An HTML block can be a special automation comment.
+            Render it if it matches one of the three automation faculties we support:
 
-    #     Render it if it matches one of the three automation faculties we support:
+                * <!--- AUTOMATION: execute=`command to execute` -->
+                * <!--- AUTOMATION: test=`test the result of some command` -->
+                * <!--- AUTOMATION: ignore=`reason for ignoring the next bash block` -->
 
-    #         * <!--- AUTOMATION: execute=`command to execute` -->
-    #         * <!--- AUTOMATION: test=`test the result of some command` -->
-    #         * <!--- AUTOMATION: ignore=`reason for ignoring the next bash block` -->
-
-    # """
+        """
         #
         # Type: execute
         #

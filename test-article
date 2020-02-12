@@ -48,7 +48,7 @@ echo -e $(scurl https://hub.mender.io/posts/${POST_ID}.json | jq '.raw') > artic
 python3 extract-code.py article.md $OUTPUT_SCRIPT_NAME
 
 # Make it executable
-chmod +x test-script
+chmod +x $OUTPUT_SCRIPT_NAME
 
 # Run the test
 if ./test-script; then

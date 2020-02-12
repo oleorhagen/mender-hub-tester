@@ -1,11 +1,51 @@
 #! /bin/bash
 
+function echoerr() {
+    echo >&2 "$@"
+}
+
+# Don't make a fuzz please
+function scurl() {
+    curl --silent --show-error "$@"
+}
+
+function usage() {
+    echoerr "test-article"
+    echoerr "usage: "
+    echoerr "test-article <hub-article-URL> <output-script-name>"
+}
+
+if [ $# -ne 2 ]; then
+    usage
+    exit 1
+fi
+
+# Exit on all errors
+set -e
+if [ ! -z "$DEBUG" ]; then
+    set -x
+fi
+
+# Hard-coded for now
+ARTICLE_URL="https://hub.mender.io/t/raspberry-pi-3-model-b-b-raspbian/140"
+OUTPUT_SCRIPT_NAME="$2"
+
+# Add the json extension if it does not exist
+ARTICLE_URL="${ARTICLE_URL%.json}.json"
 
 # Get the markdown the article is generated from
-# echo -e $(curl https://hub.mender.io/posts/284.json | jq '.raw') > article.md
+
+POST_ID=$(\
+          scurl \
+               $ARTICLE_URL | \
+              jq '.post_stream.posts[0].id' \
+       )
+
+# Extract the raw markdown from Discourse
+echo -e $(scurl https://hub.mender.io/posts/${POST_ID}.json | jq '.raw') > article.md
 
 # Build a test-script from the Mender-Hub article
-python extract-code.py article.md test-script
+python3 extract-code.py article.md $OUTPUT_SCRIPT_NAME
 
 # Make it executable
 chmod +x test-script

@@ -20,6 +20,11 @@ if [ $# -ne 2 ]; then
     exit 1
 fi
 
+# Verify all external dependencies
+hash python3 || { echoerr "Python 3 is needed to run this script"; exit 1 ;}
+hash docker || { echoerr "Docker is needed to run this script"; exit 1 ;}
+hash git || { echoerr "git is needed to run this script"; exit 1 ;}
+
 # Exit on all errors
 set -e
 if [ ! -z "$DEBUG" ]; then
@@ -34,7 +39,6 @@ OUTPUT_SCRIPT_NAME="$2"
 ARTICLE_URL="${ARTICLE_URL%.json}.json"
 
 # Get the markdown the article is generated from
-
 POST_ID=$(\
           scurl \
                $ARTICLE_URL | \
